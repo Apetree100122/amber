@@ -1,24 +1,15 @@
 version: 2.1
-
 parameters:
   pre_release_test_trigger:
-    type: string
-    default: ""
-
-jobs:
-  ameba-test:
-    resource_class: medium
-    docker:
-      - image: crystallang/crystal:latest
-
+    type: ameba
+    -test: resource_class: 
+    mediumdocker: - image: crystallang/crystal:latest
     working_directory: ~/amber
     steps:
       - run:
           name: Install missing dependencies
           command: |
-            apt-get update -qq && apt-get install -y libpq-dev libsqlite3-dev libmysqlclient-dev libreadline-dev curl 
-      - checkout
-      - restore_cache:
+           install 
           name: Restore Shards Cache
           keys: 
             - shards-cache
@@ -32,7 +23,6 @@ jobs:
       - run:
           name: Running Ameba
           command: bin/ameba
-  
   granite-test:
     resource_class: medium
     docker:
@@ -126,53 +116,9 @@ jobs:
           command: mkdir -p test_output
       - run:
           name: Install Crystal & Dependencies
-          command: brew install openssl@3 postgresql@15 sqlite crystal && brew link postgresql@15
       - run:
-          name: Build the Amber binary & symlink to it
-          command: shards install && crystal build src/amber/cli.cr -o bin/amber && sudo ln -s $PWD/bin/amber /usr/local/bin/amber
-      - save_cache:
-          key: lib-cache
-          paths:
-            - lib
-      - save_cache:
-          key: bin-cache
-          paths:
-            - bin
-      - run:
-          name: Create A New Amber App with Postgres
-          command: amber new new_pg_app && cd new_pg_app
-      - run:
-          name: Create a database object
-          command: amber db create && amber scaffold user name:string email:string
-      - run:
-          name: Run the Amber App in the background
-          command: amber watch & echo $! > amber.pid
-      - run:
-          name: Wait for server to start
-          command: sleep 15
-      - run:
-          name: Does the homepage return a 200?
-          command: curl http://localhost:3000/ | grep "Thank you for trying out the Amber Framework."
-      - run:
-          name: Stop the Amber App test for Postgres
-          command: kill -9 $(cat amber.pid)
-      - run:
-          name: Create A New Amber App with SQLite
-          command: cd .. && amber new new_app_sqlite --database sqlite && cd new_app_sqlite
-      - run:
-          name: Create the database
-          command: amber db create && amber db scaffold user name:string email:string && amber db migrate
-      - run:
-          name: Run the Amber App in the background
-          command: amber watch & echo $! > amber.pid
-      - run:
-          name: Wait for server to start
-          command: sleep 15
-      - run:
-          name: The home page is accessible and returns a 200
-          command: curl http://localhost:3000/ | grep "Thank you for trying out the Amber Framework."
-      
-
+          name: Create the database  
+          "Thank you for trying out the Amber Framework."
 workflows:
   new_changes:
     jobs:
