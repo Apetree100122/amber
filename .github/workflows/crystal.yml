@@ -11,7 +11,6 @@ jobs:
       image: crystallang/crystal
     steps:
     - uses: actions/checkout@v4
-    - name: Install 
-      run:  install Shard
-    - name: Run tests
-      run: crystal spec
+		Build: test 
+  Run: |  
+	  - tests crystal spec
