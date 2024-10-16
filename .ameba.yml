@@ -1,7 +1,2 @@
-Excluded:
-  - tmp/
-  - myapp/
-
-Lint/NotNil:
-  Enabled: false
-
+Excluded: []  
+Lint/NotNil: "Enabled"
